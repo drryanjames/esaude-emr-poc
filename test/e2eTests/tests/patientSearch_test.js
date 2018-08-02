@@ -3,6 +3,10 @@
 
 Feature('Patient Search');
 
+//TypeScript Definitions provide autocompletion in Visual Studio Code and other IDEs Definitions were generated in steps.d.ts Load them by adding at the top of a test file:
+
+/// <reference path="./steps.d.ts"/>
+
 Before(async (I, Apis, Data) => {
 	// Create the patients
 	I.say("Creating patient one");

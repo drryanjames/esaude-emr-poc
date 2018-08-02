@@ -1,5 +1,10 @@
 const translator = require('./../../translator');
 
+//TypeScript Definitions provide autocompletion in Visual Studio Code and other IDEs Definitions were generated in steps.d.ts Load them by adding at the top of a test file:
+
+/// <reference path="../../test/steps.d.ts"/>
+
+
 /**
  * Represents a component of a page.
  * Many of the POC pages consist of multiple components.

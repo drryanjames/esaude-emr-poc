@@ -44,7 +44,7 @@ class ActionsComponent extends Component {
 
     const dialogBox = '.ngdialog';
     this.I.say(`${LOG_TAG} verify the dialog popped up`);
-    this.I.waitForElement(dialogBox, 10);
+    this.I.waitForElement(dialogBox);
     this.I.see(this.translate('COMMON_MOVE_PATIENT'));
   }
 
@@ -114,7 +114,7 @@ class ActionsComponent extends Component {
   clickButton(buttonName, buttonElement) {
     this.I.say(`${LOG_TAG} Clicking on the ${buttonName} button`);
     this.I.click(buttonElement);
-    this.I.waitForInvisible('#overlay', 10);
+    this.I.waitForInvisible('#overlay');
   }
 
   /** Transfer the patient to an app by clicking the app's button */
@@ -123,15 +123,15 @@ class ActionsComponent extends Component {
     const newPageName = newPageFile.substr(0, dashboardIndexOf);
 
     this.I.say(`${LOG_TAG} Transfering the patient to ${newPageName} module`);
-    this.I.waitForElement(button.css, 5);
+    this.I.waitForElement(button.css);
     this.I.click(button);
-    this.I.waitForInvisible('#overlay', 5);
+    this.I.waitForInvisible('#overlay');
 
     const page = require(`./../${newPageFile}`);
     page._init();
 
     // Wait for URL update
-    this.I.wait(3);
+
     page.isLoaded();
     return page;
   }

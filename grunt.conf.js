@@ -128,7 +128,7 @@ module.exports = function (grunt) {
         options: {
           port: 9000,
           // Change this to '0.0.0.0' to access the server from outside.
-          hostname: '0.0.0.0',
+          hostname: 'localhost',
           livereload: 35729
         },
         proxies: [
@@ -142,7 +142,8 @@ module.exports = function (grunt) {
           ],
         livereload: {
           options: {
-            open: "http://0.0.0.0:9000/home/",
+            // Change this to '0.0.0.0' to access the server from outside.
+            open: "http://localhost:9000/home/",
             middleware: function (connect) {
               return [
                 serveStatic('.tmp'),

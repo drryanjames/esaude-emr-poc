@@ -1,6 +1,10 @@
 const Component = require('./components/component');
 const translator = require('./../translator');
 
+//TypeScript Definitions provide autocompletion in Visual Studio Code and other IDEs Definitions were generated in steps.d.ts Load them by adding at the top of a test file:
+
+/// <reference path="../tests/steps.d.ts"/>
+
 /**
  * Represents a page on the POC website
  * A page consists of functions that help tests interact with the POC page
@@ -10,9 +14,16 @@ const translator = require('./../translator');
  * This class adds the component's properties
  * to the class instance which lets tests call component methods
  * on the instance as if they were one object. See Compoent for more details.
+ *
  */
+
 class Page {
   constructor(options) {
+
+    if(!options) {
+      options={isLoaded:{ urlPart:"", element: ""}};
+    }
+
     // Make sure the components array is inialized
     options.components = options.components || [];
 
@@ -20,6 +31,8 @@ class Page {
 
     // Every page should have the header component
     if (!this.options.components.includes('header')) {
+      // eslint-disable-next-line angular/log
+      console.error("no header found on page, adding...");
       this.options.components.push('header');
     }
   }
@@ -34,11 +47,19 @@ class Page {
 
   /** Validates that the page is loaded */
   isLoaded() {
-    this.I.waitForElement(this.options.isLoaded.element, 5);
+
+    //https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagewaitfornavigationoptions
+    //await page.waitForNavigation();  // The navigationPromise resolves after navigation has finished
+    //default timeout is disabled
+    //options={timeout: 60, waitUntil: domcontentloaded};
+    //This doesnt seem to work however, check with the actual source
+
+    this.I.waitForNavigation();
+
     this.I.seeInCurrentUrl(this.options.isLoaded.urlPart);
 
     // If there is an overlay, wait for it
-    this.I.waitForInvisible('#overlay', 10);
+    this.I.waitForInvisible('#overlay');
   }
 
   /**

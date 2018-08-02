@@ -1,5 +1,5 @@
 const assert = require('assert');
-const querystring = require('querystring'); 
+const querystring = require('querystring');
 
 const APIMANAGER_LOGTAG = '[ApiManager]';
 const API_LOGTAG = '[Api]';
@@ -99,7 +99,7 @@ class ApiManager {
     this.I.say(`${APIMANAGER_LOGTAG} Resource delete by ${api.url}, removing from our clean up collection`);
 
     // When a resource is deleted remove it from our list of created objects
-    this.resourcesToCleanUp = this.resourcesToCleanUp.filter(data => data.api != api || data.resource.uuid != deletedResource.uuid);
+    this.resourcesToCleanUp = this.resourcesToCleanUp.filter( data => data.api != api || data.resource.uuid != deletedResource.uuid );
   }
 }
 
@@ -161,7 +161,7 @@ class Api {
    */
   async create(data) {
     const response = await this.I.sendPostRequest(this.url, JSON.stringify(data));
-    
+
     assert.equal(response.statusCode, 201,
       `${API_LOGTAG} create ${this.url} request failed ${JSON.stringify(response, null, 2)}`);
 

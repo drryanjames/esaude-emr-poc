@@ -67,9 +67,8 @@ class VitalsAdultFormPage extends Page {
     this.I.click('form-wizard-confirm-part button');
 
     // Wait a moment for the next page to load
-    this.I.waitForInvisible('#overlay', 5);
-    this.I.wait(1);
-    this.I.waitForInvisible('#overlay', 5);
+    this.I.waitForVisible("#overlay");
+    this.I.waitForInvisible('#overlay');
 
     const clinicDashboardPage = require('./clinicDashboardPage');
     clinicDashboardPage._init();

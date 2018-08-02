@@ -67,11 +67,11 @@ class RegistrationDashboardPage extends Page {
     const addProgramButton = `[data-target="#addProgramModal"]`;
 
     this.I.say(`${LOG_TAG} Click the add program button`);
-    this.I.waitForElement(addProgramButton, 5);
+    this.I.waitForElement(addProgramButton);
     this.I.click(addProgramButton);
 
     this.I.say(`${LOG_TAG} waiting for the add programs modal to load`);
-    this.I.wait(1);
+
   }
 
   selectProgramType(programType) {
@@ -112,7 +112,7 @@ class RegistrationDashboardPage extends Page {
     this.I.click(closeButton);
 
     this.I.say(`${LOG_TAG} wait for the date picker to close`);
-    this.I.wait(1);
+
   }
 
   clickConfirmNewProgram() {
@@ -124,12 +124,12 @@ class RegistrationDashboardPage extends Page {
   verifySuccessfulProgramEnrollment() {
     this.I.say(`${LOG_TAG} verify the success toast popped up`);
     const successElement = '.toast-success';
-    this.I.waitForElement(successElement, 10);
+    this.I.waitForElement(successElement);
 
     this.I.say(`${LOG_TAG} Wait for the modal to dissappear`);
     const modal = '#addProgramModal';
     this.I.waitForInvisible(modal);
-    this.I.wait(1);
+
 
     this.I.say(`${LOG_TAG} close the success toast`);
     const closeToastElement = '.toast-close-button';
@@ -139,7 +139,7 @@ class RegistrationDashboardPage extends Page {
   verifyModalAlert(alert) {
     this.I.say(`${LOG_TAG} verify the alert '${alert}' popped up on the modal`);
     const alertElement = '#addProgramModal .alert strong';
-    this.I.waitForElement(alertElement, 10);
+    this.I.waitForElement(alertElement);
     this.I.see(alert, alertElement);
   }
 
@@ -150,7 +150,7 @@ class RegistrationDashboardPage extends Page {
 
     const modal = '#addProgramModal';
     this.I.waitForInvisible(modal);
-    this.I.wait(1);
+
   }
 
   _selectOptionInDropDown(selectElement, optionLabel) {

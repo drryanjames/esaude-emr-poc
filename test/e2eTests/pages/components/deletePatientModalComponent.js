@@ -28,7 +28,7 @@ class DeletePatientModalComponent extends Component {
    */
   deletePatientModalIsLoaded() {
     const cancelButton = '.modal-footer .btn-default';
-    this.I.waitForElement(this.modalDialog, 5);
+    this.I.waitForElement(this.modalDialog);
     this.I.see(this.translate('DELETE_PATIENT'));
     this.I.seeElement(cancelButton);
     this._verifySaveButtonIsDisabled();
@@ -63,7 +63,7 @@ class DeletePatientModalComponent extends Component {
     const alertElement = '.alert-info';
     const disabledCheckbox = locate('button').withAttr({ name: 'isDead', disabled: 'disabled' });
     this.I.say(`${LOG_TAG} Verifying that it is not possible to delete the patient`);
-    this.I.waitForElement(alertElement, 10);
+    this.I.waitForElement(alertElement);
     this.I.see(this.translate('COMMON_CANT_DELETE_PATIENT_WITH_HISTORY'), alertElement);
     this.I.seeElement(disabledCheckbox);
     this._verifySaveButtonIsDisabled();
@@ -84,13 +84,13 @@ class DeletePatientModalComponent extends Component {
   verifyPatientDeathDetails(deathDetails) {
     this.I.say(`${LOG_TAG} Verifying patient death details`);
     const patientHeader = '.patientdeceased';
-    this.I.waitForElement(patientHeader, 10);
+    this.I.waitForElement(patientHeader);
     this.I.see(`${this.translate('PATIENT_IS_DEAD')} ${this.translate('COMMON_AT')}: ${deathDetails.date} ${this.translate('PATIENT_INFO_DEATH_REASON')}: ${deathDetails.reason}`);
 
     this.I.say(`${LOG_TAG} Verifying the edit and delete buttons are disabled`);
     const disabledEditButton = locate('button').withAttr({ id: 'edit_patient', disabled: 'disabled' });
     const disabledDeleteButton = locate('button').withAttr({ id: 'delete_patient', disabled: 'disabled' });
-    this.I.waitForElement('#delete_patient', 10);
+    this.I.waitForElement('#delete_patient');
     // this.I.seeElement(disabledEditButton); // There is a bug on the system... this should be disabled. Issue #563 (github)
     this.I.seeElement(disabledDeleteButton);
   }
@@ -105,7 +105,7 @@ class DeletePatientModalComponent extends Component {
   _clickSaveButton() {
     const saveButton = '.modal-footer .btn-primary';
     this.I.click(saveButton);
-    this.I.waitForInvisible('#overlay', 5);
+    this.I.waitForInvisible('#overlay');
   }
 }
 

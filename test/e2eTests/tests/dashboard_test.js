@@ -1,3 +1,6 @@
+//TypeScript Definitions provide autocompletion in Visual Studio Code and other IDEs Definitions were generated in steps.d.ts Load them by adding at the top of a test file:
+
+/// <reference path="./steps.d.ts"/>
 
 Feature('Dashboard');
 
@@ -48,7 +51,7 @@ Scenario('Navigate though dashboards and transfer the patient between dashboards
     const breadcrumbElement = isDashboard ? 'a[href="#/search"]' : '.breadcrumb .ng-binding';
 
     I.say(`${LOG_TAG} Verifying the bradcrumb on the page`);
-    I.waitForElement(breadcrumbSection, 10);
+    I.waitForElement(breadcrumbSection);
     I.seeElement(breadcrumbElement);
     I.see(breadcrumbText);
   };
@@ -68,7 +71,7 @@ Scenario('Navigate though dashboards and transfer the patient between dashboards
     const formattedDate = `${birthdate.getDate()}/${month}/${birthdate.getFullYear()}`;
 
     I.say(`${LOG_TAG} Verifying patient header`);
-    I.waitForElement(patientHeader, 5);
+    I.waitForElement(patientHeader);
     I.see(`${patient.person.names[0].givenName} ${patient.person.names[0].familyName}`);
     I.see(`${age} (${formattedDate})`);
     I.see(`NID (SERVICO TARV): ${patient.identifiers[0].identifier}`);
@@ -78,7 +81,7 @@ Scenario('Navigate though dashboards and transfer the patient between dashboards
     const visitHeader = locate('visit-header');
 
     I.say(`${LOG_TAG} Verifying visit header`);
-    I.waitForElement(visitHeader, 5);
+    I.waitForElement(visitHeader);
     I.see(DashboardPage.translate('REGISTRATION_LAST_VISIT'));
     I.see(DashboardPage.translate('COMMON_CONSULTATION'));
     I.see(DashboardPage.translate('COMMON_PHARMACY'));
@@ -109,12 +112,12 @@ Scenario('Navigate though dashboards and transfer the patient between dashboards
 
   I.say(`${LOG_TAG} Validate the check in message appears`);
   RegistrationDashboardPage.verifyCheckIn();
-  I.waitForInvisible('#overlay', 5);
+  I.waitForInvisible('#overlay');
 
   I.say(`${LOG_TAG} Go back by clicking the breadcrumb link`);
   const link = 'a[href="#/search"]';
   I.click(link);
-  I.waitForInvisible('#overlay', 5);
+  I.waitForInvisible('#overlay');
   I.say(`${LOG_TAG} Make sure the registration page is loaded`);
   registrationPage.isLoaded();
 

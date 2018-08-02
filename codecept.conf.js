@@ -13,7 +13,7 @@ const proxy = gruntConfig.connect.proxies[0];
 const addPages = (include) => {
   // Read all files in the pages dir
   const pagePaths = fs.readdirSync(`${__dirname}/${TestDir}/pages`);
-  
+
   // Add each file to config.include
   // Skip page.js and anything not ending in .js, like folders
   pagePaths.forEach(pagePath => {
@@ -24,7 +24,7 @@ const addPages = (include) => {
 
     // Ex: registrationPage.js
     const pageFilename = path.basename(pagePath);
-    
+
     // Get the name of the page and capitalize the first letter
     // Ex: RegistrationPage
     let pageName = path.basename(pagePath, path.extname(pagePath));
@@ -41,11 +41,13 @@ const addPages = (include) => {
 
 module.exports.config = {
   tests: `./${TestDir}/**/*_test.js`,
-  timeout: 10000,
+  timeout: 0,
   output: `./${TestDir}/output`,
   helpers: {
     Puppeteer: {
       url: `http://${options.hostname}:${options.port}`,
+      waitForNavigation: "networkidle0",
+      waitForTimeout: 30000,
       driver: 'hosted',
       browser: 'chrome',
       rootElement: 'body',

@@ -70,8 +70,8 @@ class DashboardPage extends Page {
    * @param {string} newPageFile - the name of the new page that opens
    */
   _navigate(button, newPageFile) {
-    this.I.waitForElement(button.css, 5);
-    this.I.wait(1);
+    this.I.waitForElement(button.css);
+
     this.I.click(button);
 
     const page = require(`./${newPageFile}`);

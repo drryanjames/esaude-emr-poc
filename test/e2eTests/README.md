@@ -10,7 +10,7 @@ In order to validate the POC website is working properly someone needs to open t
 1.  [Setup your development environment](https://github.com/drryanjames/esaude-emr-poc/tree/docs#setup-development-environment)
 2.  In the root directory run `npm install`
 3.  In a new terminal start selenium `npm run wd:start`
-4.  In a separate terminal run E2E tests `npm run e2e`
+4.  In a separate terminal run E2E tests `npm run e2e` or `npm run e2e-debug`
 5.  Once the tests have finished open `test/e2eTests/reports/pocE2E.html` to view results
 
 ## How Do I Write E2E Tests?

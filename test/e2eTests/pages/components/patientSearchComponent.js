@@ -21,7 +21,7 @@ class PatientSearchComponent extends Component {
    */
   disableAutoSelect() {
     this.I.waitForElement('barcode-listener', 10);
-    
+
     // Update auto selection
     this.I.executeScript(() => angular.element('barcode-listener').data('auto-select', false));
   }
@@ -32,14 +32,14 @@ class PatientSearchComponent extends Component {
    */
   search(text) {
     this.I.waitForElement(this.searchBox);
-    
+
     // Search
     this.I.fillField(this.searchBox, text);
 
     // Wait for the search to complete
-    this.I.waitForInvisible('#overlay', 5);
+    this.I.waitForInvisible('#overlay');
 
-    this.I.wait(1);
+
   }
 
   /**
@@ -51,28 +51,28 @@ class PatientSearchComponent extends Component {
     const patientId = patient.identifiers[0].identifier;
 
     // Make sure the element is visible
-    this.I.waitForText(patientId, 5, '.patient-identifier');
+    this.I.waitForText(patientId, /*5,*/ context='.patient-identifier');
 
-    // Find the correct element and click it 
+    // Find the correct element and click it
     this.I.executeScript((patientId) => {
       try {
         // Get the div that displays the patient's id
         const patientIdElement = angular.element(`td.patient-identifier:contains('${patientId}')`);
-        
+
         // Get the row element containing the patient id because
         // it's the element we need to click to navigate to the patient's page
         const patientRow = patientIdElement.parent('tr[st-select-row="patient"');
-        
+
         // Click it
         patientRow.click();
       } catch(e) {
         $log.log(`Unable to find patient with id ${patientId}. Error: ${e}`);
       }
-      
+
     }, patientId);
 
     this.I.say(`${LOG_TAG} wait for next page to load`);
-    this.I.wait(2);
+
   }
 
   /** Clears the search box */
@@ -82,7 +82,7 @@ class PatientSearchComponent extends Component {
     this.I.fillField(this.searchBox, '');
 
     // Wait for the search to complete
-    this.I.waitForInvisible('#overlay', 5);
+    this.I.waitForInvisible('#overlay');
   }
 
   /**

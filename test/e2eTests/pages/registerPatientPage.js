@@ -160,7 +160,7 @@ class RegisterPatientPage extends Page {
    */
   clickNext(seconds = 5) {
     this.I.click(this.buttons.nextStep);
-    this.I.waitForInvisible('#overlay', seconds);
+    this.I.waitForInvisible('#overlay');//, seconds);
   }
 
   confirmPatientData(patient) {

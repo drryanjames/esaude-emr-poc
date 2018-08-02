@@ -40,11 +40,11 @@ class ClinicDashboardPage extends Page {
     const addButton = `[data-qa-service-id="${vitalsServiceId}"] button[data-qa-type="add"]`;
 
     this.I.say(`${LOG_TAG} Click the add button`);
-    this.I.waitForElement(addButton, 5);
+    this.I.waitForElement(addButton);
     this.I.click(addButton);
 
     this.I.say(`${LOG_TAG} waiting for adult vitals form to load`);
-    this.I.wait(1);
+
 
     const vitalsAdultFormPage = require('./vitalsAdultFormPage');
     vitalsAdultFormPage._init();
