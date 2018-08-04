@@ -63,7 +63,7 @@ You should have Google Chrome or Chromium browser installed in order to run unit
 
 ### Configuration
 
-In order for Grunt to forward the REST calls made to the OpenMRS platform to the correct location, you will need to configure the `proxies` section of `Gruntfile.js` as follows:
+In order for Grunt to forward the REST calls made to the OpenMRS platform to the correct location, you will need to configure the `proxies` section of `grunt.conf.js` as follows:
 
 ```js
 proxies: [

@@ -3,6 +3,10 @@ const assert = require('assert');
 // Test for:
 // https://docs.google.com/document/d/1hihKCjCQVprju_SCi1nqXCYchY-ThX4iqHPkv4asnt0/edit#heading=h.gpe6dgjlwx02
 
+//TypeScript Definitions provide autocompletion in Visual Studio Code and other IDEs Definitions were generated in steps.d.ts Load them by adding at the top of a test file:
+
+/// <reference path="./steps.d.ts"/>
+
 Feature('Check In Patient');
 
 const LOG_TAG = '[CheckInTests]';
@@ -11,6 +15,7 @@ let Patient1 = null;
 
 Before(async (I, Apis, Data) => {
   I.say(`${LOG_TAG} Creating patient one`);
+  //Person1 = await Apis.person.create(Data.patients.patient1);
   Patient1 = await Apis.patient.create(Data.patients.patient1);
 });
 
@@ -30,6 +35,7 @@ After(async (I, Apis, Data) => {
 
   // Removes the encounter if it was created
   const cleanUpPatientEncounter = async (patient) => {
+
     I.say(`${LOG_TAG} Deleting any encounters created through the UI`);
 
     I.say(`${LOG_TAG} Getting all encounters associated with patient ${patient.uuid}`);
@@ -40,6 +46,12 @@ After(async (I, Apis, Data) => {
       encounters.forEach(async v => await Apis.encounter.delete(v));
     }
   };
+
+  if(!Patient1)
+  {
+    I.say(`${LOG_TAG} Patient is null, check if there was an error creating patient`);
+    return;
+  }
 
   // If this test passed then a visit or encounter was created
   // If so, it needs to be deleted so the patient can be cleaned up

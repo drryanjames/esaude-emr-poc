@@ -5,6 +5,11 @@ const assert = require('assert');
 
 Feature('Delete Patient');
 
+//TypeScript Definitions provide autocompletion in Visual Studio Code and other IDEs Definitions were generated in steps.d.ts Load them by adding at the top of a test file:
+
+/// <reference path="./steps.d.ts"/>
+
+
 const LOG_TAG = '[DeletePatientTests]';
 
 let Patient = null;
@@ -41,6 +46,12 @@ After(async (I, Apis, Data) => {
       encounters.forEach(async v => await Apis.encounter.delete(v));
     }
   };
+
+  if(!Patient)
+  {
+    I.say(`${LOG_TAG} Patient is null, check if there was an error creating patient`);
+    return;
+  }
 
   await cleanUpPatientEncounter(Patient);
   await cleanUpPatientVisit(Patient);

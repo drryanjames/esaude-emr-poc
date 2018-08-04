@@ -2,13 +2,19 @@ const Page = require('./page');
 
 const LOG_TAG = '[RegisterPatientPage]';
 
+/**
+ * Represents the register patint page
+ * and includes functionality that facilitates interacting
+ * with the page during tests
+ * @extends Page
+ */
 class RegisterPatientPage extends Page {
 
   constructor() {
     super({
       isLoaded: {
         element: '[id="status-buttons"]',
-        urlPart: 'registration/#/patient/new/identifier',
+        urlPart: 'registration/#/patient/new',
       },
     });
 
@@ -46,9 +52,9 @@ class RegisterPatientPage extends Page {
       cell: { css: '#address3' },
       street: { css: '#address1' },
       provenience: 'select[id="d10628a7-ba75-4495-840b-bf6f1c44fd2d"]',
-      reference: { css: '#Ponto de Referência' },
-      phone1: { css: '#Numero de Telefone 1' },
-      phone2: { css: '#Numero de Telefone 2' },
+      reference: 'input[id="e944813c-11b1-49f3-b9a5-9fbbd10beec2"',
+      phone1: 'input[id="e2e3fd64-1d5f-11e0-b929-000c29ad1d07"',
+      phone2: 'input[id="e6c97a9d-a77b-401f-b06e-81900e21ed1d"',
       hivTestDate: 'input[id="46e79fce-ba89-4ec9-8f31-2dfd9318d415"',
       hivTestType: 'select[id="ce778a93-66f9-4607-9d80-8794ed127674"]',
       hivTestResult: 'select[id="31cb61f4-3d81-403d-94e9-64cce17a2a00"',
@@ -60,7 +66,10 @@ class RegisterPatientPage extends Page {
     };
   }
 
-  // Check additional elements
+  /**
+   * Checks to see if the url in chrome is loaded and
+   * checks additional elements on the page
+   */
   isLoaded() {
     super.isLoaded();
     this.I.seeElement(this.tabs.identifiers);
@@ -73,41 +82,70 @@ class RegisterPatientPage extends Page {
     this.I.see('NID (SERVICO TARV)');
   }
 
+  /**
+   * Fill the identifier form with the patient's identifier
+   * @param {object} patient - patient info that contains an identifier to fill the form with
+   */
   fillIdentifierForm(patient) {
     this.I.fillField(this.fields.nid, patient.identifiers[0].identifier3);
   }
 
+  /**
+   * Fills the name form with the patient first and last name
+   * @param {object} patient - patient info to fill the form with
+   */
   fillNameForm(patient) {
     this.I.fillField(this.fields.givenName, patient.person.names[0].givenName);
     this.I.fillField(this.fields.familyName, patient.person.names[0].familyName);
   }
 
+  /**
+   * Selects the appropriate gender based on the given patient info
+   * @param {object} patient - the patient info to select the gender from
+   */
   selectGender(patient) {
     const genderButton = `label[for="patientGender${patient.person.gender}"]`;
     this.I.click(genderButton);
   }
 
+  /**
+   * Fills in the birthdate form with the patient's birthdate
+   * @param {object} patient - patient info containing the patient's birthdate
+   */
   fillBirthDateForm(patient) {
     this.I.click(this.fields.birthDate);
     this.I.fillField(this.fields.birthDate, patient.person.birthdate);
     this.I.click('Done');
   }
 
+  /**
+   * Fills the contact form with patient info
+   * @param {object} patient - patient info used to fill the form
+   */
   fillContactForm(patient) {
     this.I.fillField(this.fields.street, patient.contacts.street);
     this.I.fillField(this.fields.cell, patient.contacts.cell);
     this.I.fillField(this.fields.neighborhood, patient.contacts.neighborhood);
     this.I.fillField(this.fields.locality, patient.contacts.locality);
     this.I.fillField(this.fields.administrativePost, patient.contacts.administrativePost);
-    this.I.fillField(this.fields.district, patient.contacts.district);
-    this.I.fillField(this.fields.province, patient.contacts.province);
-    this.I.fillField(this.fields.country, patient.contacts.country);
+
+    this.I.say(`${LOG_TAG} Populate district, province and country based on the typed administrative Post`);
+    const typeaheadMatch = `a[title="${patient.contacts.administrativePost}"]`;
+    this.I.click(typeaheadMatch);
   }
 
+  /**
+   * Selects the appropriate provenience based on the patients info
+   * @param {object} patient - patient info used to select the provenience
+   */
   selectProvenience(patient) {
     this.I.selectOption(this.fields.provenience, patient.contacts.provenience);
   }
 
+  /**
+   * Fills the HIV form with patient info
+   * @param {object} patient - patient info used to fill the form
+   */
   fillHIVTestForm(patient) {
     this.I.click(this.fields.hivTestDate);
     this.I.fillField(this.fields.hivTestDate, patient.tests.testDate);
@@ -116,9 +154,23 @@ class RegisterPatientPage extends Page {
     this.I.selectOption(this.fields.hivTestResult, patient.tests.testResult);
   }
 
+  /**
+   * Clicks the next button
+   * @param {number} seconds - the max number of seconds to wait for the oerlay to dissappear
+   */
   clickNext(seconds = 5) {
     this.I.click(this.buttons.nextStep);
-    this.I.waitForInvisible('#overlay', seconds);
+    this.I.waitForInvisible('#overlay');//, seconds);
+  }
+
+  confirmPatientData(patient) {
+    this.I.see(patient.identifiers[0].identifier3);
+    this.I.see(patient.person.names[0].givenName);
+    this.I.see(patient.person.names[0].familyName);
+    this.I.see(patient.person.birthdate);
+    this.I.see(patient.contacts.district);
+    this.I.see(patient.contacts.province);
+    this.I.see(patient.contacts.country);
   }
 
 }

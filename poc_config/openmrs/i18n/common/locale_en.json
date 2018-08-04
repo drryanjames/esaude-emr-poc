@@ -163,7 +163,7 @@
     "SCHEDULE_LIST_PATIENT": "Consultations and pharmacy pick-ups scheduled for today",
     "SCHEDULE_LIST_PROVIDER": "Consultations scheduled for today",
     "SCHEDULE_LIST_DRUG_PICKUP": "Pharmacy pick-ups scheduled for today",
-    "SCHEDULE_HASNT_SCHEDULES": "No shcedules made for today",
+    "SCHEDULE_HASNT_SCHEDULES": "None scheduled for today",
     "SCHEDULE_PATIENT": "Patient",
     "SCHEDULE_DATE_SCHEDULED": "Scheduled on",
     "SCHEDULE_SCHEDULED_BY": "Scheduled by",

@@ -1,12 +1,25 @@
-Feature('Eroll A Patient');
+Feature('Enroll A Patient');
 
 const LOG_TAG = '[EnrollPatientTest]';
 
+//TypeScript Definitions provide autocompletion in Visual Studio Code and other IDEs Definitions were generated in steps.d.ts Load them by adding at the top of a test file:
+
+/// <reference path="./steps.d.ts"/>
+
 let Patient1 = null;
+
+let ProgramResources = [];
 
 Before(async (I, Apis, Data) => {
   I.say(`${LOG_TAG} Creating patient one`);
   Patient1 = await Apis.patient.create(Data.patients.patient1);
+
+  /*I.say(`${LOG_TAG} Creating Programs`);
+  for( program in Data.programs )
+  {
+    ProgramResources[ProgramResources.length]= await Apis.program.create(program);
+  }*/
+
 });
 
 After(async (I, Apis, Data) => {
@@ -23,7 +36,15 @@ After(async (I, Apis, Data) => {
     }
   };
 
+  if(!Patient1)
+  {
+    I.say(`${LOG_TAG} Patient is null, check if there was an error creating patient`);
+    return;
+  }
+
   await cleanUpPatientProgramEnrollments(Patient1);
+
+  //await cleanUpPrograms()
 });
 
 Scenario('Successfully enroll patient in program', (I, Data, RegistrationDashboardPage) => {
@@ -86,10 +107,10 @@ Scenario('Successfully enroll patient in program', (I, Data, RegistrationDashboa
   {
     I.say(`${LOG_TAG} Click the add program button`);
     RegistrationDashboardPage.clickAddProgramButton();
-    
+
     I.say(`${LOG_TAG} Click the confirm button`);
     RegistrationDashboardPage.clickConfirmNewProgram();
-    
+
     I.say(`${LOG_TAG} Verify the alert popped up with ${RegistrationDashboardPage.alerts.NO_PROGRAM}`);
     RegistrationDashboardPage.verifyModalAlert(RegistrationDashboardPage.alerts.NO_PROGRAM);
 

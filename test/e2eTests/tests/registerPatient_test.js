@@ -7,6 +7,10 @@ Feature('Register Patient');
 
 const LOG_TAG = '[RegisterPatientTests]';
 
+//TypeScript Definitions provide autocompletion in Visual Studio Code and other IDEs Definitions were generated in steps.d.ts Load them by adding at the top of a test file:
+
+/// <reference path="./steps.d.ts"/>
+
 Before(async (I, Apis, Data) => {
   I.say(`${LOG_TAG} Starting Patient Registration Tests`);
 });
@@ -26,40 +30,13 @@ After(async (I, Apis, Data) => {
     }
   };
 
+  /*if(!Patient1)
+  {
+    I.say(`${LOG_TAG} Patient is null, check if there was an error creating patient`);
+    return;
+  }*/
+
   await cleanUpPatient(Data.patients.patient3);
-});
-
-Scenario('Validate tab sequence', (I) => {
-  I.say(`${LOG_TAG} login`);
-  let dashboardPage = I.login();
-
-  I.say(`${LOG_TAG} Navigate to the registration page`);
-  const registrationPage = dashboardPage.navigateToRegistrationPage();
-
-  I.say(`${LOG_TAG} Click on the New Patient button`);
-  const registerPatientPage = registrationPage.clickNewPatienButton();
-
-  const tabSequenseMessage = registerPatientPage.translate('FOLLOW_SEQUENCE_OF_TABS');
-
-  I.say(`${LOG_TAG} Validating tab sequence`);
-
-  I.click(registerPatientPage.tabs.name);
-  I.see(registerPatientPage.translate('ERROR_REQUIRED'));
-
-  I.click(registerPatientPage.tabs.gender);
-  I.see(tabSequenseMessage);
-
-  I.click(registerPatientPage.tabs.age);
-  I.see(tabSequenseMessage);
-
-  I.click(registerPatientPage.tabs.address);
-  I.see(tabSequenseMessage);
-
-  I.click(registerPatientPage.tabs.contacts);
-  I.see(tabSequenseMessage);
-
-  I.click(registerPatientPage.tabs.testing);
-  I.see(tabSequenseMessage);
 });
 
 Scenario('Validate Identifiers', (I) => {
@@ -184,7 +161,7 @@ Scenario('Register a patient', (I, Data, RegistrationDashboardPage) => {
   validateRequiredFields(I, registerPatientPage, 'Identifier', 1);
   I.say(`${LOG_TAG} Fill in the NID identifier and move to Name tab`);
   registerPatientPage.fillIdentifierForm(patient);
-  I.waitForInvisible('#overlay', 5);
+  I.waitForInvisible('#overlay');
   registerPatientPage.clickNext();
 
   validateRequiredFields(I, registerPatientPage, 'Names', 2);
@@ -217,12 +194,12 @@ Scenario('Register a patient', (I, Data, RegistrationDashboardPage) => {
   registerPatientPage.fillHIVTestForm(patient);
   registerPatientPage.clickNext();
 
-  I.say(`${LOG_TAG} Scroll down and confirm patient registration`);
+  I.say(`${LOG_TAG} Confirm patient data and scroll down to save the patient`);
+  registerPatientPage.confirmPatientData(patient);
   I.scrollPageToBottom();
   I.click(registerPatientPage.buttons.confirm);
 
-  I.say(`${LOG_TAG} verify the success toast popped up`);
-  I.waitForElement(registerPatientPage.elements.successElement, 10);
+  registerPatientPage.verifySuccessToast('COMMON_PATIENT_CREATED');
 
   I.say(`${LOG_TAG} Make sure the registration dashboard page is loaded`);
   RegistrationDashboardPage.isLoaded();
@@ -245,7 +222,7 @@ const addIdentifier = (I, RegisterPatientPage, identifier) => {
   I.say(`${LOG_TAG} Adding ${identifier.label} identifier`);
   I.click(RegisterPatientPage.buttons.addIdentifier);
   I.selectOption(RegisterPatientPage.fields.identifierType, identifier.label);
-  I.wait(1);
+
 };
 
 const validateIdentifier = (I, RegisterPatientPage, identifier) => {
@@ -263,7 +240,7 @@ const validateIdentifier = (I, RegisterPatientPage, identifier) => {
 
   for (var i = 0; i < identifier.values.length; i++) {
     I.fillField(inputField, identifier.values[i]);
-    I.waitForInvisible('#overlay', 5);
+    I.waitForInvisible('#overlay');
 
     // Prevent from going to the next page
     if (i < identifier.values.length - 1) {
@@ -275,5 +252,5 @@ const validateIdentifier = (I, RegisterPatientPage, identifier) => {
     // Make sure the last value is always the valid one
     I.fillField(inputField, identifier.values[identifier.values.length - 1]);
   }
-  I.wait(1);
+
 };

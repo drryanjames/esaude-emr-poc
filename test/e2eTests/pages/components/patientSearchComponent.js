@@ -2,71 +2,93 @@ const Component = require('./component');
 
 const LOG_TAG = '[PatientSearchComponent]';
 
+/**
+ * Functions that help tests interact with the patient search bar
+ * @extends Component
+ */
 class PatientSearchComponent extends Component {
   constructor() {
     super();
     this.searchBox = 'input[ng-model="vm.searchText"';
   }
 
+  /**
+   * By default the search bar with automatically select the first
+   * patient in the results array. This is problem in several scenarios
+   * including those that want to verify what's on the page without selecting
+   * a patient and those that want to select a result other than the first.
+   * This function must be called before searching the disable autoselection
+   */
   disableAutoSelect() {
-    this.I.waitForElement('barcode-listener');
-    
+    this.I.waitForElement('barcode-listener', 10);
+
     // Update auto selection
     this.I.executeScript(() => angular.element('barcode-listener').data('auto-select', false));
   }
 
-  // Searches in the registration search box
+  /**
+   * Searches in the search box
+   * @param {string} text - the test to search for
+   */
   search(text) {
     this.I.waitForElement(this.searchBox);
-    
+
     // Search
     this.I.fillField(this.searchBox, text);
 
     // Wait for the search to complete
-    this.I.waitForInvisible('#overlay', 5);
+    this.I.waitForInvisible('#overlay');
 
-    this.I.wait(1);
+
   }
 
+  /**
+   * Clicks the search result associated with the given patient
+   * Fails the test if the patient is not in the results
+   * @param {object} patient - the patient to click
+   */
   clickSearchResult(patient) {
     const patientId = patient.identifiers[0].identifier;
 
     // Make sure the element is visible
-    this.I.waitForText(patientId, 5, '.patient-identifier');
+    this.I.waitForText(patientId, /*5,*/ context='.patient-identifier');
 
-    // Find the correct element and click it 
+    // Find the correct element and click it
     this.I.executeScript((patientId) => {
       try {
         // Get the div that displays the patient's id
         const patientIdElement = angular.element(`td.patient-identifier:contains('${patientId}')`);
-        
+
         // Get the row element containing the patient id because
         // it's the element we need to click to navigate to the patient's page
         const patientRow = patientIdElement.parent('tr[st-select-row="patient"');
-        
+
         // Click it
         patientRow.click();
       } catch(e) {
         $log.log(`Unable to find patient with id ${patientId}. Error: ${e}`);
       }
-      
+
     }, patientId);
 
     this.I.say(`${LOG_TAG} wait for next page to load`);
-    this.I.wait(2);
+
   }
 
-  // Clears the search box
-  clearSearch(text) {
+  /** Clears the search box */
+  clearSearch() {
     this.I.waitForElement(this.searchBox);
 
     this.I.fillField(this.searchBox, '');
 
     // Wait for the search to complete
-    this.I.waitForInvisible('#overlay', 5);
+    this.I.waitForInvisible('#overlay');
   }
 
-  // Used to validate search results
+  /**
+   * Validates the patient's information is visible
+   * @param {object} patient - info about the patient to validate
+   */
   seePatientRecord(patient) {
     const birthdate = new Date(patient.person.birthdate);
     const age = this._calculateAge(birthdate);
@@ -85,18 +107,26 @@ class PatientSearchComponent extends Component {
     // TODO: Validate scheduled day for consultation
   }
 
-  // Used to make sure a patient is not visible
+  /**
+   * Validates that the patient's info is NOT visible
+   * @param {object} patient - info about the patient to validate is NOT vissible
+   */
   dontSeePatientRecord(patient) {
     this.I.dontSee(patient.identifiers[0].identifier);
     this.I.dontSee(patient.person.names[0].givenName);
     this.I.dontSee(patient.person.names[0].familyName);
   }
 
+  /** Validates that no results are visible */
   seeNoResults() {
     this.I.see('Nenhum resultado encontrado');
   }
 
-  // Search for the patient by their id, verify the search result then select it
+  /**
+   * Searches for the patient by their id, verifies
+   * the search result and then selects the patient
+   * @param {object} patient - info about the patient used to search, verify and select
+   */
   searchForPatientByIdAndSelect(patient) {
     const patientId = patient.identifiers[0].identifier;
 
